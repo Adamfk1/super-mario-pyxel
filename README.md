@@ -1,3 +1,3 @@
 # super-mario-pyxel
 
-# 15/01/2021
+The original super mario re-created using pyxel.
