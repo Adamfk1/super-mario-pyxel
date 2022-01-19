@@ -15,7 +15,7 @@ class Koopa():
         self.__vx = 1
         self.map = map
         self.count_lives = 3
-        self.collisions = Collisions(map)
+        self.collisions = Collisions(self.map)
         self.w = 16
         self.h = 24
         self.sprite = (0, 48, 32, self.w, self.h)

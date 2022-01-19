@@ -2,7 +2,7 @@ import pyxel
 import random
 from goomba import Goomba
 from koopa import Koopa
-from blocks import Question, Brick, Pipe
+from blocks import Question, Brick
 from collisions import Collisions
 from powerups import PowerUps
 from decorations import Cloud, Bush
@@ -22,6 +22,7 @@ class Map:
         
         self.power_ups = []
         self.question_blocks = self.create_question_blocks()
+
         
 
     def collision_handler(self, mario):
@@ -30,7 +31,14 @@ class Map:
         self.question_collision(mario, power_ups)
         
         self.power_up_collision(mario)
-    
+            
+    def static_collision_handler(self, mario, object):
+        if self.collider.is_colliding(mario, object) == (True, "up"):
+            mario.collide_above()
+        if self.collider.is_colliding(mario, object) == (True, "left"):
+            mario.collide_left()
+        if self.collider.is_colliding(mario, object) == (True, "right"):
+            mario.collide_right()
          
     def question_collision(self, mario, power_ups):
         for question in self.question_blocks:
@@ -40,15 +48,10 @@ class Map:
                     question.sprites.set_current_phase("solid_block")
                     self.power_ups.append(PowerUps(question.x, question.y - 16 , 16, 16, random.choice(power_ups)))
                 
-            if self.collider.is_colliding(mario, question) == (True, "up"):
-                mario.collide_above()
-            if self.collider.is_colliding(mario, question) == (True, "left"):
-                mario.collide_left()
-            if self.collider.is_colliding(mario, question) == (True, "right"):
-                mario.collide_right()
-    
+            self.static_collision_handler(mario, question)
+            
 
-    
+
     def power_up_collision(self, mario):
         for power_up in self.power_ups:
             if self.collider.is_colliding(mario, power_up):
@@ -95,8 +98,7 @@ class Map:
             
         for power_up in self.power_ups:
             power_up.move(velocity)
-            
-
+        
 
     def update(self):
         pass
@@ -107,6 +109,7 @@ class Map:
 
         self.clouds.draw()    
         self.bushes.draw()
+        
                 
         for question in self.question_blocks:
             question.sprites.draw(question.x, question.y)

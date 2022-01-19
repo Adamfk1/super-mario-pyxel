@@ -17,7 +17,7 @@ class Mario():
 
 
         self.map = map
-        self.collider = Collisions(map)
+        self.collider = Collisions(self.map)
 
         
         self.phases = {
