@@ -1,5 +1,4 @@
 import pyxel
-from sprite import Sprite
 
 class Cloud:
     
@@ -24,9 +23,8 @@ class Bush:
     
     def __init__(self):
             
-        self.__bush = [[30, 224],[720, 224]]
+        self.__bush = [[30, 224],[800, 224]]
 
-        
     @property
     def bush(self):
         return self.__bush

@@ -5,6 +5,7 @@ import pyxel
 from fireball import Fireball
 from collisions import Collisions
 from sprite import Sprite
+from debuggers import Debugger
 
 class Mario():
 
@@ -68,6 +69,7 @@ class Mario():
         
         self.sprites = Sprite(self.phases, "small_mario_right")
 
+        self.debugger = Debugger(self)
 
         self.score = 0
         
@@ -125,7 +127,8 @@ class Mario():
                 ["small_mario_run_left_1", "small_mario_run_left_2", "small_mario_run_left_3"],\
                     ["big_mario_run_left_1", "big_mario_run_left_2", "big_mario_run_left_3"],\
                         ["fire_mario_run_left_1", "fire_mario_run_left_2", "fire_mario_run_left_3"])
-
+            
+            self.hit_wall_left()
 
 
         elif pyxel.btn(pyxel.KEY_DOWN):
@@ -248,10 +251,7 @@ class Mario():
             return True
 
     def collide_above(self):
-        if self.is_small():
-            mario_feet = self.y + 17
-        if self.is_big() or self.is_fire():
-            mario_feet = self.y + 33
+        mario_feet = self.y + self.h
         self.vy = 0
         self.y = ((mario_feet) - ((mario_feet) % 16)) - self.h
         if pyxel.btn(pyxel.KEY_UP) or pyxel.btn(pyxel.KEY_SPACE):
@@ -358,65 +358,19 @@ class Mario():
     def mario_shoot(self):
 
         if pyxel.btnp(pyxel.KEY_F):
-            self.fireballs.append(Fireball(map))
+            self.fireballs.append(Fireball(self.map))
             for fireball in self.fireballs:
                 fireball.fire(self.x, self.y)
         for fireball in self.fireballs:
             fireball.update_pve()
 
-    def debug_transform(self):
-        if pyxel.btnp(pyxel.KEY_B):
-            self.y -= 8
-            self.sprites.set_current_phase("big_mario_left")
-        if pyxel.btnp(pyxel.KEY_V):
-            self.y -= 8
-            self.sprites.set_current_phase("fire_mario_left")
-        if pyxel.btnp(pyxel.KEY_S):
-            self.sprites.set_current_phase("small_mario_left")
-            
-    def debug_draw(self):
         
-        if pyxel.btn(pyxel.KEY_1):
-            pyxel.rectb(self.x, self.y, self.w, self.h, 0)   
-                 
-        if pyxel.btn(pyxel.KEY_2):
-            if self.is_small():
-                pyxel.circb(self.x, self.y + 17, 2, 0)
-                pyxel.circb(self.x + 10, self.y + 17, 2, 0)
-            elif self.is_big() or self.is_fire():
-                pyxel.circb(self.x, self.y + 33, 2, 0)
-                pyxel.circb(self.x + 16, self.y + 33, 2, 0)
-                
-        if pyxel.btn(pyxel.KEY_3):
-            if self.is_small():
-                pyxel.circb(self.x, self.y, 2, 0)
-                pyxel.circb(self.x + 10, self.y, 2, 0)
-            if self.is_big() or self.is_fire():
-                pyxel.circb(self.x, self.y, 2, 0)
-                pyxel.circb(self.x + 16, self.y, 2, 0)
-                
-        if pyxel.btn(pyxel.KEY_4):
-            if self.is_small():
-                pyxel.circb(self.x + 14, self.y + 13, 2, 0)
-                pyxel.circb(self.x + 14, self.y, 2, 0)
-            elif self.is_big() or self.is_fire():
-                pyxel.circb(self.x + 16, self.y + 32, 2, 0)
-                pyxel.circb(self.x + 16, self.y, 2, 0)
-                
-        if pyxel.btn(pyxel.KEY_5):
-            if self.is_small():
-                pyxel.circb(self.x, self.y + 13, 2, 0)
-                pyxel.circb(self.x, self.y, 2, 0)
-            elif self.is_big() or self.is_fire():
-                pyxel.circb(self.x, self.y + 32, 2, 0)
-                pyxel.circb(self.x, self.y, 2, 0)
-                                    
     def update(self):
     
         self.move_x()
         self.move_y()
         self.mario_shoot()
-        self.debug_transform()
+        self.debugger.update()
         self.map.collision_handler(self)
         
         print(f"{self.x}, {self.y}")
@@ -425,7 +379,7 @@ class Mario():
             
         self.sprites.draw(self.x, self.y)
 
-        self.debug_draw()
+        self.debugger.draw()
             
         for fireball in self.fireballs:
             fireball.sprites.draw(fireball.x, fireball.y)

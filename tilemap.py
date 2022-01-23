@@ -85,7 +85,7 @@ class Map:
             pass
             
     def create_question_blocks(self):
-        question_blocks = [Question(176, 160), Question(224, 160), Question(240,160), Question(120, 192)]
+        question_blocks = [Question(176, 160), Question(224, 160), Question(240,160), Question(120, 192), Question(240, 224)]
         return question_blocks
     
 
