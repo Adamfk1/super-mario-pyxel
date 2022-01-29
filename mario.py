@@ -9,11 +9,11 @@ from debuggers import Debugger
 
 class Mario():
 
-    def __init__(self, x: int, y: int, velocity: int, map):
+    def __init__(self, x: int, y: int, vx: int, map):
         
         self.x = x
         self.y = y
-        self.vx = velocity
+        self.vx = vx
         self.vy = 0
 
 
